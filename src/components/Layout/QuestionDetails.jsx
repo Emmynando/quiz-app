@@ -26,7 +26,8 @@ function QuestionDetails(props) {
     });
   }, []);
 
-  const quiz = question.questions;
+  const quiz = question?.questions;
+  console.log(quiz);
 
   // const quiz = question.questions;
   // const slicedQuiz = { ...quiz };
@@ -51,33 +52,26 @@ function QuestionDetails(props) {
             <span> marks</span>
           </p>
         </div>
-        <div>
-          <ul>
-            {mappedQuizCopyValues?.map((item, index) => {
-              return <li key={index}>{item[index]}</li>;
-            })}
-          </ul>
-        </div>
       </div>
-      {/* {mappedQuizCopyValues.map((item) => {
+      {/* {quiz.map((item) => (
         <div className={styles["question-container"]}>
           <h3> {item.question}</h3>
           <ul>
             <li>
-              <button> {item.option1} yea</button>
+              <button> {item?.option1} yea</button>
             </li>
             <li>
-              <button> {item.option2} </button>
+              <button> {item?.option2} </button>
             </li>
             <li>
-              <button> {item.option} </button>
+              <button> {item?.option} </button>
             </li>
             <li>
-              <button> {item.option4} </button>
+              <button> {item?.option4} </button>
             </li>
           </ul>
-        </div>;
-      })} */}
+        </div>
+      ))} */}
     </Card>
   );
 }

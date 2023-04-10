@@ -1,7 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import RootLayout from "./Pages/RootLayout";
-import FormRoot from "./Pages/FormRoot";
 import Home from "./Pages/Home";
 import QuestionPage from "./Pages/Question";
 import FormPage from "./Pages/Form";
@@ -15,9 +14,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+        // loader: () => {},
       },
       {
-        path: "quiz-section",
+        path: ":quizSection",
         element: <QuestionPage />,
       },
       {
@@ -25,12 +25,21 @@ const router = createBrowserRouter([
         element: <FormPage />,
       },
       {
-        path: ":edit-quiz",
+        path: ":editQuiz",
         element: <EditQuizPage />,
       },
     ],
   },
 ]);
+// const initialQuizState = {
+//   id: "",
+//   password: "",
+//   title: "",
+//   description: "",
+//   time: 0,
+//   marks: 0,
+//   questions: [],
+// };
 
 function App() {
   return (

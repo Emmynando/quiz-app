@@ -1,41 +1,70 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// import { quizData } from "../../store/quiz-action";
-import { fetchQuizData } from "../../store/quiz-action";
-import { useSelector, useDispatch } from "react-redux";
+import { db } from "../../firebaseConfig/firebase";
+import {
+  getDocs,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 import styles from "./HomeDetails.module.css";
 import Card from "../UI/Card";
-
-const Quiz_Data = [
-  {
-    id: 1,
-    quizTitle: "Forestry",
-    description:
-      "This quiz is related to questions pertaining forestry, do well to gain high score",
-  },
-  {
-    id: 2,
-    quizTitle: "Globetrotting",
-    description:
-      "This quiz is related to questions pertaining travelling, do well to gain high score",
-  },
-];
+import QuestionDetails from "../Layout/QuestionDetails";
 
 function HomeDetails() {
-  const dispatch = useDispatch();
-  const quizSelector = useSelector((state) => state.quiz);
-  console.log(quizSelector);
+  const [loading, setLoading] = useState(false);
+  // use state effect for fetching quiz state
+  const [quizState, setQuizState] = useState([]);
 
-  let isInitial;
+  // firebase database configuration
+  const quizCollection = collection(db, "quiz");
+
+  // This effect fetches quiz data from firebase on every reload
   useEffect(() => {
-    dispatch(fetchQuizData());
-  }, [dispatch]);
+    const fetchQuizData = async () => {
+      try {
+        const data = await getDocs(quizCollection);
+        // creating variable for mapping data which is passed to the use state hook
+        const filteredData = data.docs.map((docs) => ({
+          ...docs.data(),
+          id: docs.id,
+        }));
+        setQuizState(filteredData);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchQuizData();
+  }, []);
 
-  // useEffect(() => {
-  //   if (quizSelector.changed) {
-  //     dispatch(quizData(quizSelector));
-  //   }
-  // }, [quizSelector, dispatch]);
+  // function for deleting data from firebase
+  async function deleteQuiz(id) {
+    try {
+      const quizDoc = doc(db, "quiz", id);
+      const data = await getDocs(quizCollection);
+      const docSnap = await getDoc(quizDoc);
+      if (docSnap.exists()) {
+        // declaring registered password
+        const { password } = docSnap.data();
+        const auth = prompt("Input Password? ");
+        // prompting user for password
+        if (auth === password) {
+          // deleting quiz
+          await deleteDoc(quizDoc);
+          alert("quiz successfully deleted");
+        } else {
+          // alert for if password do not match
+          alert("Password do not match");
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <Card>
@@ -43,22 +72,22 @@ function HomeDetails() {
         <h2>Ready for a Quiz?</h2>
         <h4> Select any from the quizes below</h4>
       </div>
-
-      {/* <div className={styles["list-container"]}> */}
-      {/* maps the quiz so users can select */}
-      {/* {quizSelector.map((items) => (
-          <div key={items.id} id={items.id} className={styles["quiz-item"]}>
-            <Link to=":edit-quiz">
-              <h5> {items.title}</h5>
-              <p>{items.description}</p>
+      <div className={styles["list-container"]}>
+        {quizState.map((quiz) => (
+          <div className={styles["quiz-item"]} key={quiz.id}>
+            <Link to={`/${quiz.id}`}>
+              <h5> {quiz.title}</h5>
+              <p>{quiz.description}</p>
             </Link>
             <div>
-              <button>Edit</button>
-              <button>Delete</button>
+              <button>
+                <Link to={`/${quiz.id}`}>Edit</Link>
+              </button>
+              <button onClick={() => deleteQuiz(quiz.id)}>Delete</button>
             </div>
-          </div> */}
-      {/* ))} */}
-      {/* </div> */}
+          </div>
+        ))}
+      </div>
     </Card>
   );
 }

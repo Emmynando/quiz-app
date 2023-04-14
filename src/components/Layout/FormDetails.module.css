@@ -57,3 +57,10 @@ form button:active {
   border-color: rgb(34, 34, 34);
   color: black;
 }
+
+.error {
+  color: red;
+  background-color: black;
+  width: 12rem;
+  font-size: 12px;
+}

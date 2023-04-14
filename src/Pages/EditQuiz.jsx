@@ -25,6 +25,7 @@ function EditQuizPage() {
     getDoc(docRef).then((doc) => {
       if (doc.exists) {
         const data = doc.data();
+        setQuizState(data);
         console.log(data);
         // password = data.password;
         // title.value = data.title;

@@ -7,16 +7,12 @@ import {
   deleteDoc,
   doc,
   getDoc,
-  query,
-  where,
-  onSnapshot,
 } from "firebase/firestore";
 import styles from "./HomeDetails.module.css";
 import Card from "../UI/Card";
 import QuestionDetails from "../Layout/QuestionDetails";
 
 function HomeDetails() {
-  const [loading, setLoading] = useState(false);
   // use state effect for fetching quiz state
   const [quizState, setQuizState] = useState([]);
 
@@ -40,6 +36,11 @@ function HomeDetails() {
     };
     fetchQuizData();
   }, []);
+
+  const quizStateLength =
+    quizState.length >= 1
+      ? "Select any from the quizes below"
+      : "No avaialable Quiz at the moment";
 
   // function for deleting data from firebase
   async function deleteQuiz(id) {
@@ -70,7 +71,7 @@ function HomeDetails() {
     <Card>
       <div className={styles["home-container"]}>
         <h2>Ready for a Quiz?</h2>
-        <h4> Select any from the quizes below</h4>
+        <h4> {quizStateLength}</h4>
       </div>
       <div className={styles["list-container"]}>
         {quizState.map((quiz) => (

@@ -1,0 +1,31 @@
+.score {
+  background-color: rgb(20, 17, 17);
+  text-align: center;
+  color: white;
+  font-weight: bolder;
+  width: 80%;
+  height: 100vh;
+  margin: 0;
+  position: absolute;
+  padding: 1rem;
+  z-index: 2;
+}
+.text {
+  display: block;
+  margin: 1rem auto;
+}
+
+.main-score {
+  display: block;
+  font-weight: 900;
+  font-size: 50px;
+}
+
+.score button {
+  background-color: white;
+  border-radius: 10px;
+  color: black;
+  display: block;
+  margin: 1rem auto 0;
+  padding: 0.5rem;
+}

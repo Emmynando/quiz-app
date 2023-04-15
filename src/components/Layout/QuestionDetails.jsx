@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebaseConfig/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import ScoreBoard from "./ScoreBoard";
 
 import Card from "../UI/Card";
 import styles from "./QuestionDetails.module.css";
@@ -10,17 +11,20 @@ function QuestionDetails(props) {
   // declaring the ID using params
   const params = useParams();
 
-  const [quizIndex, setQuizIndex] = useState(0);
-
   // state management for question array
   const [question, setQuestion] = useState([]);
+
+  // state management for showing score
+  const [showScore, setShowScore] = useState(false);
 
   // state management for timer
   const [timer, setTimer] = useState(0);
 
   // state management for marks
   const [isMarks, setIsMarks] = useState(0);
+  const [count, setCount] = useState(0);
 
+  let index = 0;
   // redering quiz to be taken using the ID
   const getQuizId = params.quizSection;
 
@@ -49,7 +53,13 @@ function QuestionDetails(props) {
       return setTimer((timer) => timer - 1);
     }, 1000);
 
-    if (timer === 0) {
+    // displayimg score when timer runs out
+    if (timer < 0) {
+      setShowScore(true);
+    }
+
+    // stops timer from running when timer runs runs out
+    if (timer < 0) {
       clearInterval(timeout);
     }
 
@@ -58,31 +68,29 @@ function QuestionDetails(props) {
 
   // extracting the questions for map
   const quiz = question?.questions ?? [];
-  const quizAnswer = quiz.filter((item) => item?.answer);
-  // console.log(quizAnswer);
 
-  let intialQuizScore = 0;
+  let initialQuizScore = 0;
   // function for verifying Answer
-  function answerHandler(e) {
+  function answerHandler(e, correctAnswer) {
     const selectedOption = e.target.textContent.toLowerCase();
-    const quizElement = quizAnswer.map((element) =>
-      element["answer"].toLowerCase()
-    );
 
-    // converting object to string since selected option is a string
-    const jsonQuizElement = JSON.parse(quizElement);
-    console.log(typeof jsonQuizElement);
-    console.log(typeof selectedOption);
+    // restarting timer
+    const restartTime = Number(question.time);
 
-    if (jsonQuizElement.includes(selectedOption)) {
+    // conparing selected answer to correct answer
+    if (correctAnswer.toLowerCase().trim() === selectedOption.trim()) {
       alert("Correct");
+      setCount(count + isMarks);
+      setTimer(restartTime);
     } else {
       alert("wrong");
+      setShowScore(true);
     }
   }
 
   return (
     <Card>
+      {showScore && <ScoreBoard score={count} />}
       <div className={styles.counter}>
         <div className={styles["time-counter"]}>
           <p> {timer}secs</p>
@@ -90,7 +98,7 @@ function QuestionDetails(props) {
 
         <div className={styles["score-counter"]}>
           <p>
-            {intialQuizScore}
+            {count}
             <span> marks</span>
           </p>
         </div>
@@ -100,19 +108,28 @@ function QuestionDetails(props) {
           <h3> {item.question}</h3>
           <ul>
             <li>
-              <button onClick={answerHandler} name={item?.option1}>
+              <button
+                onClick={(e) => answerHandler(e, item?.answer)}
+                name={item?.option1}
+              >
                 {" "}
                 {item?.option1}
               </button>
             </li>
             <li>
-              <button onClick={answerHandler} name={item?.option2}>
+              <button
+                onClick={(e) => answerHandler(e, item?.answer)}
+                name={item?.option2}
+              >
                 {" "}
                 {item?.option2}{" "}
               </button>
             </li>
             <li>
-              <button onClick={answerHandler} name={item?.option3}>
+              <button
+                onClick={(e) => answerHandler(e, item?.answer)}
+                name={item?.option3}
+              >
                 {" "}
                 {item?.option3}{" "}
               </button>

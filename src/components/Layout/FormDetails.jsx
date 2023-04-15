@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useFieldArray, useForm, FormProvider } from "react-hook-form";
 import { db } from "../../firebaseConfig/firebase";
 import { addDoc, collection } from "firebase/firestore";
-import useBeforeUnload from "../../Hooks/useBeforeUnload";
 
 import Card from "../UI/Card";
 import styles from "./FormDetails.module.css";

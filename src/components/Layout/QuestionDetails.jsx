@@ -26,11 +26,13 @@ function QuestionDetails(props) {
 
   let index = 0;
   // redering quiz to be taken using the ID
-  const getQuizId = params.quizSection;
+  // const getQuizId = params.quizSection;
+  const questionId = params.quizSection;
+  const currentQuestion = `${questionId}/${index}`;
 
   // This effect fetches quiz data from firebase on every reload
   useEffect(() => {
-    const docRef = doc(db, "quiz", getQuizId);
+    const docRef = doc(db, "quiz", questionId);
 
     getDoc(docRef).then((doc) => {
       if (doc.exists) {

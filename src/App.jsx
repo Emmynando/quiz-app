@@ -14,10 +14,9 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-        // loader: () => {},
       },
       {
-        path: ":quizSection",
+        path: ":quizSection/:id",
         element: <QuestionPage />,
       },
       {
@@ -31,15 +30,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-// const initialQuizState = {
-//   id: "",
-//   password: "",
-//   title: "",
-//   description: "",
-//   time: 0,
-//   marks: 0,
-//   questions: [],
-// };
 
 function App() {
   return (

@@ -10,11 +10,13 @@ import styles from "./QuestionDetails.module.css";
 function QuestionDetails(props) {
   // declaring the ID using params
   const params = useParams();
+  const { quizSection: quizId, id: questionId } = params;
+  console.log(params);
 
   // state management for question array
   const [question, setQuestion] = useState([]);
 
-  // state management for showing score
+  // state management for showing total score
   const [showScore, setShowScore] = useState(false);
 
   // state management for timer
@@ -26,13 +28,13 @@ function QuestionDetails(props) {
 
   let index = 0;
   // redering quiz to be taken using the ID
-  // const getQuizId = params.quizSection;
-  const questionId = params.quizSection;
-  const currentQuestion = `${questionId}/${index}`;
+
+  const currentQuestion = `${quizId}/${questionId}`;
+  console.log(currentQuestion);
 
   // This effect fetches quiz data from firebase on every reload
   useEffect(() => {
-    const docRef = doc(db, "quiz", questionId);
+    const docRef = doc(db, "quiz", quizId);
 
     getDoc(docRef).then((doc) => {
       if (doc.exists) {

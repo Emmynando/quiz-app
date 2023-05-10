@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFieldArray, useForm, FormProvider } from "react-hook-form";
 import { db } from "../../firebaseConfig/firebase";
@@ -7,6 +8,7 @@ import Card from "../UI/Card";
 import styles from "./FormDetails.module.css";
 
 function FormDetails() {
+  const [showDialog, setShowDialog] = useState(false);
   const navigate = useNavigate();
   // using formhook to handle state
   const { register, handleSubmit, control, formState } = useForm({
@@ -69,7 +71,9 @@ function FormDetails() {
               })}
               onChange={submitHandler}
             />
-            <p className={styles.error}>{errors.password?.message}</p>
+            <p className={styles.error}>
+              {showDialog && errors.password?.message}
+            </p>
             <label htmlFor="title">Question Title</label>
             <input
               type="text"
@@ -105,7 +109,9 @@ function FormDetails() {
               })}
               onChange={submitHandler}
             />
-            <p className={styles.error}>{errors.marks?.message}</p>
+            <p className={styles.error}>
+              {showDialog && errors.marks?.message}
+            </p>
             <label htmlFor="time">Input Time limit(in seconds)</label>
             <input
               type="number"
@@ -117,7 +123,7 @@ function FormDetails() {
               })}
               onChange={submitHandler}
             />
-            <p className={styles.error}>{errors.time?.message}</p>
+            <p className={styles.error}>{showDialog && errors.time?.message}</p>
           </div>
           <div className={styles["form-container"]}>
             {fields.map((field, index) => {
@@ -126,13 +132,15 @@ function FormDetails() {
                   <input
                     type="text"
                     placeholder="Your question"
-                    maxLength={52}
+                    maxLength={150}
                     {...register(`questions.${index}.question`, {
                       required: "Question is required",
                     })}
                     onChange={submitHandler}
                   />
-                  <p className={styles.error}>{errors.questions?.message}</p>
+                  <p className={styles.error}>
+                    {showDialog && errors.questions?.message}
+                  </p>
                   <input
                     type="text"
                     placeholder="Option 1"

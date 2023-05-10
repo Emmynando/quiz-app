@@ -10,8 +10,7 @@ import styles from "./QuestionDetails.module.css";
 function QuestionDetails(props) {
   // declaring the ID using params
   const params = useParams();
-  const { quizSection: quizId, id: questionId } = params;
-  console.log(params);
+  let { quizSection: quizId, id: questionId } = params;
 
   // state management for question array
   const [question, setQuestion] = useState([]);
@@ -29,8 +28,8 @@ function QuestionDetails(props) {
   let index = 0;
   // redering quiz to be taken using the ID
 
-  const currentQuestion = `${quizId}/${questionId}`;
-  console.log(currentQuestion);
+  // const currentQuestion = `${quizId}/${questionId - 1}`;
+  // console.log(currentQuestion);
 
   // This effect fetches quiz data from firebase on every reload
   useEffect(() => {
@@ -72,6 +71,8 @@ function QuestionDetails(props) {
 
   // extracting the questions for map
   const quiz = question?.questions ?? [];
+  const currentQuestion = quiz[questionId - 1];
+
 
   let initialQuizScore = 0;
   // function for verifying Answer
@@ -85,6 +86,7 @@ function QuestionDetails(props) {
     if (correctAnswer.toLowerCase().trim() === selectedOption.trim()) {
       alert("Correct");
       setCount(count + isMarks);
+      questionId = +1;
       setTimer(restartTime);
     } else {
       alert("wrong");
@@ -107,7 +109,43 @@ function QuestionDetails(props) {
           </p>
         </div>
       </div>
-      {quiz.map((item) => (
+      {currentQuestion ? (
+        <div
+          className={styles["question-container"]}
+          key={currentQuestion.question}
+        >
+          <h3> {currentQuestion.question}</h3>
+          <ul>
+            <li>
+              <button
+                onClick={(e) => answerHandler(e, currentQuestion.answer)}
+                name={currentQuestion.option1}
+              >
+                {" "}
+                {currentQuestion.option1}
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={(e) => answerHandler(e, currentQuestion.answer)}
+                name={currentQuestion.option2}
+              >
+                {currentQuestion.option2}{" "}
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={(e) => answerHandler(e, currentQuestion.answer)}
+                name={currentQuestion.option3}
+              >
+                {" "}
+                {currentQuestion.option3}{" "}
+              </button>
+            </li>
+          </ul>
+        </div>
+      ) : null}
+      {/* {quiz.map((item) => (
         <div className={styles["question-container"]} key={item.question}>
           <h3> {item.question}</h3>
           <ul>
@@ -140,7 +178,7 @@ function QuestionDetails(props) {
             </li>
           </ul>
         </div>
-      ))}
+      ))} */}
     </Card>
   );
 }

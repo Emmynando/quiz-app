@@ -76,7 +76,7 @@ function HomeDetails() {
       <div className={styles["list-container"]}>
         {quizState.map((quiz) => (
           <div className={styles["quiz-item"]} key={quiz.id}>
-            <Link to={`/${quiz.id}`}>
+            <Link to={`/${quiz.id}/1`}>
               <h5> {quiz.title}</h5>
               <p>{quiz.description}</p>
             </Link>

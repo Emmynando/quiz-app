@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../firebaseConfig/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import ScoreBoard from "./ScoreBoard";
@@ -8,6 +8,7 @@ import Card from "../UI/Card";
 import styles from "./QuestionDetails.module.css";
 
 function QuestionDetails(props) {
+  const navigate = useNavigate();
   // declaring the ID using params
   const params = useParams();
   let { quizSection: quizId, id: questionId } = params;
@@ -73,7 +74,6 @@ function QuestionDetails(props) {
   const quiz = question?.questions ?? [];
   const currentQuestion = quiz[questionId - 1];
 
-
   let initialQuizScore = 0;
   // function for verifying Answer
   function answerHandler(e, correctAnswer) {
@@ -86,7 +86,7 @@ function QuestionDetails(props) {
     if (correctAnswer.toLowerCase().trim() === selectedOption.trim()) {
       alert("Correct");
       setCount(count + isMarks);
-      questionId = +1;
+      navigate(`./../${Number.parseInt(questionId) + 1}`);
       setTimer(restartTime);
     } else {
       alert("wrong");
